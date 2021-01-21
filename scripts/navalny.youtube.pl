@@ -18,6 +18,19 @@ my $wday;
 my $yday;
 my $isdst;
 
+# Files block
+
+my $urlist;
+my $pages;
+my $process1;
+my $process2;
+
+$urllist = '</home/tinea/Documents/H_et_S/Projects/github/youtube_tracker/scripts/urllist.txt';
+$pages = '>>/home/tinea/Documents/H_et_S/Projects/github/youtube_tracker/downloads/pages.raw.txt';
+$process1 = '</home/tinea/Documents/H_et_S/Projects/github/youtube_tracker/downloads/pages.raw.txt';
+$process2 = '>>/home/tinea/Documents/H_et_S/Projects/github/youtube_tracker/downloads/pages.processed.02.txt'
+
+
 open (SRC00, '</home/tinea/Documents/H_et_S/Projects/github/youtube_tracker/scripts/urllist.txt') or die $!;
 open (TGT00, '>>/home/tinea/Documents/H_et_S/Projects/github/youtube_tracker/downloads/pages.raw.txt') or die $!;
 while(<SRC00>){
@@ -34,8 +47,8 @@ my $now = sprintf("%04d-%02d-%02d %02d:%02d:%02d", $year+1900, $mon+1, $mday, $h
 
 # Extractor block
 
-open (SRC01, '</home/tinea/Documents/H_et_S/Projects/github/youtube_tracker/downloads/pages.raw.txt') or die $!;
-open (TGT01, '>>/home/tinea/Documents/H_et_S/Projects/github/youtube_tracker/downloads/pages.processed.01.txt') or die $!;
+open (SRC01, $urlist) or die $!;
+open (TGT01, $pages) or die $!;
 	while (<SRC01>) {
 		s/ \- YouTube//g;
 		s/(?=\"LIKE\")|(?=\"DISLIKE\")/\n/g;
@@ -49,8 +62,8 @@ my $views;
 my $likes;
 my $dislikes;
 
-open (SRC02, '</home/tinea/Documents/H_et_S/Projects/github/youtube_tracker/downloads/pages.processed.01.txt') or die $!;
-open (TGT02, '>>/home/tinea/Documents/H_et_S/Projects/github/youtube_tracker/downloads/pages.processed.02.txt') or die $!;
+open (SRC02, $process1) or die $!;
+open (TGT02, $process2) or die $!;
 	while (<SRC02>) {
 		s/(?<=[0-9])\xc2\xa0(?=[0-9][0-9][0-9])//g;
 			if($_ =~ m/^.*\<title\>(.*?)\<\/title\>.*/a){
@@ -77,3 +90,4 @@ close TGT02;
 my @files_to_remove = qw/\/home\/tinea\/Documents\/H_et_S\/Projects\/github\/youtube_tracker\/downloads\/pages.raw.txt \/home\/tinea\/Documents\/H_et_S\/Projects\/github\/youtube_tracker\/downloads\/pages.processed.01.txt/;
 
 unlink @files_to_remove;
+
